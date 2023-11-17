@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/home/printDan") // -> 요청주소의 경로를 매핑했다 (도메인 주소를 바꿨다?) 
+@WebServlet("/home/printDan2") // -> 요청주소의 경로를 매핑했다 (도메인 주소를 바꿨다?) 
 
 public class HomeMainServlet2 extends HttpServlet {
 	
@@ -19,7 +19,7 @@ public class HomeMainServlet2 extends HttpServlet {
 		String inputLimit = request.getParameter("limit");
 		String inputColor = request.getParameter("color");
 		
-		if(inputDan == null) {
+		if(inputDan == null) { // inputDan에 아무것도 입력안했을 때 널이 찍히므로 널 검증해주자
 			inputDan = "1";
 		}
 		
