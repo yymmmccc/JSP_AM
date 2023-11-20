@@ -8,6 +8,8 @@
 	// 키 articleListMap 의 값은 오브젝트(객체)로 가져오기때문에 List<Map> 형태로 형변환 해줘야 함
 	int currentPage = (int)request.getAttribute("page");
 	int totalPage = (int)request.getAttribute("totalPage");
+	int from = (int)request.getAttribute("from");
+	int end = (int)request.getAttribute("end");
 %>
 <!DOCTYPE html>
 <html>
@@ -51,14 +53,21 @@
 	</style>
 	
 	<div class="paging">
-		<% 
-		for(int i = 1; i <= totalPage; ++i){
-		%>
-		<a class="<%= currentPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%= i %></a>
-		<%
-		} 
-		%>
-		<a href=""></a>
+		<% if(currentPage > 1){ %>
+			<a href="list?page=1"> << </a> 
+		<% } %>
+		<% if(currentPage > 1){ %>
+			<a href="list?page=<%= currentPage-1 %>"> < </a> 
+		<% } %>
+		<% for(int i = from; i <= end; ++i){ %>
+			<a class="<%= currentPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%= i %></a>
+		<% } %>
+		<% if(currentPage < totalPage){ %>
+			<a href="list?page=<%= currentPage+1 %>"> > </a>
+		<% } %>
+		<% if(currentPage < totalPage){ %>
+			<a href="list?page=<%= totalPage %>"> >> </a>
+		<% } %>
 	</div>
 </body>
 </html>

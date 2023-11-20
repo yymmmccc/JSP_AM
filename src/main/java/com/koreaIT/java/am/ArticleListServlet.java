@@ -44,6 +44,13 @@ public class ArticleListServlet extends HttpServlet {
 			int totalCount = DBUtil.selectRowIntValue(conn, sql); // 레코드 총 갯수 -> 토탈페이지를 구하기 위한 변수
 			int totalPage = (int) Math.ceil((double)totalCount / itemsPage); // 레코드 총 갯수 / 10
 			
+			int pageSize = 5;
+			
+			int from = page - pageSize;  // ex. 현재 7페이지에 있으면 7-5 = 2 2부터 7까지
+			if(from <= 0) from = 1;
+			int end = page + pageSize;   // ex. 현재 7페이지에 있으면 7+5 = 12 7부터 12까지
+			if(end > totalPage) end = totalPage;
+			
 			sql = new SecSql();
 			sql.append("SELECT *");
 			sql.append("FROM article");
@@ -57,6 +64,8 @@ public class ArticleListServlet extends HttpServlet {
 			
 			request.setAttribute("page", page); // 현재 페이지 데이터 전송
 			request.setAttribute("totalPage", totalPage); // 총 페이지 갯수 전송
+			request.setAttribute("from", from);
+			request.setAttribute("end", end);
 			request.setAttribute("articleListMap", articleListMap); // 세팅할거야~ articleListMap이라는 이름의 키한테 articleListMap 값 저장
 			
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
