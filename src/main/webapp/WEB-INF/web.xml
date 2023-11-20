@@ -39,4 +39,24 @@
     <servlet-name>ArticleDetailServlet</servlet-name>
     <url-pattern>/ArticleDetailServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ArticleDoDeleteServlet</display-name>
+    <servlet-name>ArticleDoDeleteServlet</servlet-name>
+    <servlet-class>com.koreaIT.java.am.ArticleDoDeleteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ArticleDoDeleteServlet</servlet-name>
+    <url-pattern>/ArticleDoDeleteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ArticleWriteServlet</display-name>
+    <servlet-name>ArticleWriteServlet</servlet-name>
+    <servlet-class>com.koreaIT.java.am.ArticleWriteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ArticleWriteServlet</servlet-name>
+    <url-pattern>/ArticleWriteServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,15 +1,12 @@
 package com.koreaIT.java.am;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import com.koreaIT.java.am.util.DBUtil;
 import com.koreaIT.java.am.util.SecSql;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,14 +27,36 @@ public class ArticleListServlet extends HttpServlet {
 			
 			conn = DriverManager.getConnection(url, "root", "");  // root는 아이디 pw 는 없으므로 공백
 			
-			SecSql sql = new SecSql();
+			int page = 1; // 시작 페이지이므로 1로 설정
 			
+			if(request.getParameter("page") != null && request.getParameter("page").length() != 0) {
+				page = Integer.parseInt(request.getParameter("page"));
+				// page에 값이 있을때는 int형으로 형변환 : 왜냐 파라미터로 받는 page는 String이므로
+			}
+			
+			int itemsPage = 10;   // 한페이지당 게시글 갯수 10개
+			
+			int limitFrom = (page - 1) * itemsPage;  // 1페이지면 -> 0 , 2페이지면 -> 10
+			
+			SecSql sql = new SecSql();
+			sql.append("SELECT COUNT(*) FROM article");
+			
+			int totalCount = DBUtil.selectRowIntValue(conn, sql); // 레코드 총 갯수 -> 토탈페이지를 구하기 위한 변수
+			int totalPage = (int) Math.ceil((double)totalCount / itemsPage); // 레코드 총 갯수 / 10
+			
+			sql = new SecSql();
 			sql.append("SELECT *");
 			sql.append("FROM article");
 			sql.append("ORDER BY id DESC");
+			sql.append("LIMIT ?, ?", limitFrom, itemsPage); 
+			// 1페이지면 레코드 0부터 시작해서 10개보여줘 0, 1, 2... 9
+			// 2페이지면 레코드 10부터 시작해서 10개 보여줘
+			// 3페이지면 레코드 20부터 시작해서 10개보여줘
 			
 			List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 			
+			request.setAttribute("page", page); // 현재 페이지 데이터 전송
+			request.setAttribute("totalPage", totalPage); // 총 페이지 갯수 전송
 			request.setAttribute("articleListMap", articleListMap); // 세팅할거야~ articleListMap이라는 이름의 키한테 articleListMap 값 저장
 			
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);

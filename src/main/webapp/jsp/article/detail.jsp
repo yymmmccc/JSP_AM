@@ -21,5 +21,6 @@
  	<div>제목 : <%=(String)articleMap.get("title")%></div>
  	<div>내용 : <%=(String)articleMap.get("body")%></div>	
  	<a href="../article/list">목록</a>
+ 	<a href="../article/doDelete?id=<%=(int)articleMap.get("id")%>">삭제</a>
 </body>
 </html>
