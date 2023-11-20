@@ -1,5 +1,4 @@
 package com.koreaIT.java.am;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,14 +14,12 @@ import java.util.Map;
 import com.koreaIT.java.am.util.DBUtil;
 import com.koreaIT.java.am.util.SecSql;
 
-@WebServlet("/article/doWrite")
-public class ArticleDoWriteServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-  
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("text/html; charset=UTF-8"); // 아래 코드를 텍스트html로 생각하겠다.
-		
+@WebServlet("/article/modify")
+
+public class ArticleModifyServlet extends HttpServlet {
+	
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		Connection conn = null; // 접속정보 알기위한 변수
 		
 		try {
@@ -31,23 +28,19 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			
 			conn = DriverManager.getConnection(url, "root", "");  // root는 아이디 pw 는 없으므로 공백
 			
-			//int id = Integer.parseInt(request.getParameter("id"));
-			String title = request.getParameter("title");
-			String body = request.getParameter("body");
+			int id = Integer.parseInt(request.getParameter("id"));
 			
 			SecSql sql = new SecSql();
 			
-			sql.append("INSERT INTO article");
-			sql.append("SET regDate = NOW(), ");
-			sql.append("updateDate = NOW(), ");
-			sql.append("title = ?, ", title);
-			sql.append("body = ?", body);
+			sql.append("SELECT *");
+			sql.append("FROM article");
+			sql.append("WHERE id = ?", id);
 			
-			DBUtil.insert(conn, sql);
+			Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
 			
-			response.getWriter().append("<script>alert('게시물 생성 성공!'); location.replace('list')</script>");
+			request.setAttribute("articleMap", articleMap); // 세팅할거야~ articleListMap이라는 이름의 키한테 articleListMap 값 저장
 			
-			//request.getRequestDispatcher("../article/list").forward(request, response);
+			request.getRequestDispatcher("/jsp/article/modify.jsp").forward(request, response);
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패");
@@ -62,9 +55,7 @@ public class ArticleDoWriteServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
 	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
+
 }

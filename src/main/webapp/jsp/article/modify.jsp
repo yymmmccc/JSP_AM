@@ -12,16 +12,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시물 상세보기</title>
+<title>게시물 수정</title>
 </head>
 <body>
-	<h1><%=(int)articleMap.get("id")%>번 게시물</h1>
+	<h1><%=(int)articleMap.get("id")%>번 게시물 수정</h1>
  	<div>글번호 : <%=(int)articleMap.get("id")%></div>
  	<div>작성일 : <%=(LocalDateTime)articleMap.get("regDate")%></div>
- 	<div>제목 : <%=(String)articleMap.get("title")%></div>
- 	<div>내용 : <%=(String)articleMap.get("body")%></div>	
+ 	<form action="doModify" method="GET">
+ 		<div>제목 : <input name="title" type="text" value="<%=(String)articleMap.get("title")%>"/></div>
+ 		<div>내용 : <textarea name="body" cols="30" rows="10"><%=(String)articleMap.get("body")%></textarea></div>
+ 		<input type="hidden" name="id" value="<%=(int)articleMap.get("id")%>">
+ 		<button>수정</button>
+ 	</form>
+ 	<a href="detail?id=<%=(int)articleMap.get("id")%>">취소</a>
  	<a href="../article/list">목록</a>
- 	<a href="../article/doDelete?id=<%=(int)articleMap.get("id")%>" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
- 	<a href="../article/modify?id=<%=(int)articleMap.get("id")%>">수정</a>
 </body>
 </html>
