@@ -59,4 +59,14 @@
     <servlet-name>ArticleWriteServlet</servlet-name>
     <url-pattern>/ArticleWriteServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>MemberDoJoinServlet</display-name>
+    <servlet-name>MemberDoJoinServlet</servlet-name>
+    <servlet-class>com.koreaIT.java.am.MemberDoJoinServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MemberDoJoinServlet</servlet-name>
+    <url-pattern>/MemberDoJoinServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

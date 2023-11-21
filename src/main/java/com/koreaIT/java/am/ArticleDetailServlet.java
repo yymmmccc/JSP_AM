@@ -18,7 +18,6 @@ import com.koreaIT.java.am.util.SecSql;
 
 public class ArticleDetailServlet extends HttpServlet {
 	
-       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		Connection conn = null; // 접속정보 알기위한 변수
 		
