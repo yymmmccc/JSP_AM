@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/list") // 도메인주소에 article/list가 요청이되면 WebServlet이 어 내꺼다 하고 밑에 코드 실행함
 public class ArticleListServlet extends HttpServlet {
@@ -52,8 +53,10 @@ public class ArticleListServlet extends HttpServlet {
 			if(end > totalPage) end = totalPage;
 			
 			sql = new SecSql();
-			sql.append("SELECT *");
+			sql.append("SELECT article.*, member.name");
 			sql.append("FROM article");
+			sql.append("INNER JOIN member");
+			sql.append("ON article.memberId = member.id");
 			sql.append("ORDER BY id DESC");
 			sql.append("LIMIT ?, ?", limitFrom, itemsPage); 
 			// 1페이지면 레코드 0부터 시작해서 10개보여줘 0, 1, 2... 9
@@ -68,6 +71,17 @@ public class ArticleListServlet extends HttpServlet {
 			request.setAttribute("end", end);
 			request.setAttribute("articleListMap", articleListMap); // 세팅할거야~ articleListMap이라는 이름의 키한테 articleListMap 값 저장
 			
+			int loginedMemberId = -1;
+			
+			HttpSession session = request.getSession();
+			
+			if(session.getAttribute("loginedMemberId") != null) {
+				loginedMemberId = (int)session.getAttribute("loginedMemberId"); // 키에 대한 값은 객체로 반환되기 때문에 int형으로 형변환 해줘야 함
+				// 다른 서블릿 세션에서 loginedMemberId에 값을 넣었다면 Null이 아님 
+				// null이 아니므로 세션에 들어있는 loginedMemberId 키의 값을 넣어줌
+			}
+			
+			request.setAttribute("loginedMemberId", loginedMemberId);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 			
 		} catch (ClassNotFoundException e) {

@@ -34,15 +34,10 @@ public class MemberDoJoinServlet extends HttpServlet {
 			//String loginPwChk = request.getParameter("loginPwChk");
 			String name = request.getParameter("name");
 			
+			//sql.append("SELECT COUNT(*) FROM member");
+			//sql.append("WHERE loginId = ?", loginId);
+			
 			SecSql sql = new SecSql();
-			
-			sql.append("SELECT COUNT(*) FROM member");
-			sql.append("WHERE loginId = ?", loginId);
-			
-			int idChk = DBUtil.selectRowIntValue(conn, sql);
-			if(idChk != 0) System.out.println("이미 사용중인 아이디");
-			
-			sql = new SecSql();
 			
 			sql.append("INSERT INTO member");
 			sql.append("SET regDate = NOW(), ");

@@ -50,7 +50,7 @@ public class MemberDoLoginServlet extends HttpServlet {
 				return;
 			}
 			
-			HttpSession session = request.getSession();
+			HttpSession session = request.getSession(); // request.getSession()은 서버에 생성된 세션이 있으면 반환하고 없으면 새로 생성함
 			session.setAttribute("loginedMemberId", articleMap.get("id"));
 			
 			response.getWriter().append(String.format("<script>alert('%s님 환영합니다!'); location.replace('../home/main')</script>", articleMap.get("name")));

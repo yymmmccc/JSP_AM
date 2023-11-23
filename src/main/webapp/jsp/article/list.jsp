@@ -10,6 +10,7 @@
 	int totalPage = (int)request.getAttribute("totalPage");
 	int from = (int)request.getAttribute("from");
 	int end = (int)request.getAttribute("end");
+	int loginedMemberId = (int)request.getAttribute("loginedMemberId");
 %>
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,10 @@
 <body>	
 	<h2>게시물 리스트</h2>
 	<div><a href="../home/main">메인 페이지 이동</a></div>
-	<div><a href="write">글작성</a></div>
+	
+	<% if(loginedMemberId != -1) {%>
+		<div><a href="write">글작성</a></div>
+	<% } %>
 	<table border="1">
 		<colgroup>
 			<col />
@@ -30,7 +34,8 @@
 		<tr>
 			<th>번호</th>
 			<th>작성일</th>
-			<th>내용</th>
+			<th>제목</th>
+			<th>작성자</th>
 		</tr>
 		<%
 		for (Map<String, Object> articleMap : articleListMap) {
@@ -39,6 +44,7 @@
 			<td><%=articleMap.get("id")%></td>
 			<td><%=articleMap.get("regDate")%></td>
 			<td><a href="../article/detail?id=<%=articleMap.get("id")%>"><%=articleMap.get("title")%></a></td>
+			<td><%=articleMap.get("name") %></td>
 		</tr>
 		<%
 		}

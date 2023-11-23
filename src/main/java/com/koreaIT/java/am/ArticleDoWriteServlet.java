@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,9 +33,11 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			
 			conn = DriverManager.getConnection(url, "root", "");  // root는 아이디 pw 는 없으므로 공백
 			
-			//int id = Integer.parseInt(request.getParameter("id"));
 			String title = request.getParameter("title");
 			String body = request.getParameter("body");
+			
+			HttpSession session = request.getSession();
+			int loginedMemberId = (int)session.getAttribute("loginedMemberId");
 			
 			SecSql sql = new SecSql();
 			
@@ -41,7 +45,8 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			sql.append("SET regDate = NOW(), ");
 			sql.append("updateDate = NOW(), ");
 			sql.append("title = ?, ", title);
-			sql.append("body = ?", body);
+			sql.append("body = ?, ", body);
+			sql.append("memberId = ?", loginedMemberId);
 			
 			DBUtil.insert(conn, sql);
 			
