@@ -1,18 +1,19 @@
 package com.koreaIT.java.am;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Map;
+
+import com.koreaIT.java.am.util.DBUtil;
+import com.koreaIT.java.am.util.SecSql;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import com.koreaIT.java.am.util.DBUtil;
-import com.koreaIT.java.am.util.SecSql;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/detail")
 
@@ -31,12 +32,23 @@ public class ArticleDetailServlet extends HttpServlet {
 			
 			SecSql sql = new SecSql();
 			
-			sql.append("SELECT *");
+			sql.append("SELECT article.*, member.name");
 			sql.append("FROM article");
-			sql.append("WHERE id = ?", id);
+			sql.append("INNER JOIN member");
+			sql.append("ON article.memberId = member.id");
+			sql.append("WHERE article.id = ?", id);
 			
 			Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
 			
+			int loginedMemberId = -1;
+			
+			HttpSession session = request.getSession();
+			
+			if(session.getAttribute("loginedMemberId") != null) {
+				loginedMemberId = (int)session.getAttribute("loginedMemberId");
+			}
+			
+			request.setAttribute("loginedMemberId", loginedMemberId);
 			request.setAttribute("articleMap", articleMap); // 세팅할거야~ articleListMap이라는 이름의 키한테 articleListMap 값 저장
 			
 			request.getRequestDispatcher("/jsp/article/detail.jsp").forward(request, response);

@@ -1,18 +1,19 @@
 package com.koreaIT.java.am;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Map;
+
+import com.koreaIT.java.am.util.DBUtil;
+import com.koreaIT.java.am.util.SecSql;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import com.koreaIT.java.am.util.DBUtil;
-import com.koreaIT.java.am.util.SecSql;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/modify")
 
@@ -37,6 +38,20 @@ public class ArticleModifyServlet extends HttpServlet {
 			sql.append("WHERE id = ?", id);
 			
 			Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+			
+			HttpSession session = request.getSession();
+			
+			if(session.getAttribute("loginedMemberId") == null) {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().append(String.format("<script> alert('로그인 후 이용해주세요.'); location.replace('../member/login');</script>"));
+				return;
+			}
+			
+			if(session.getAttribute("loginedMemberId") != articleMap.get("memberId")) {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().append(String.format("<script> alert('사용권한이 없습니다.'); location.replace('../article/detail?id=%d');</script>", id));
+				return;
+			}
 			
 			request.setAttribute("articleMap", articleMap); // 세팅할거야~ articleListMap이라는 이름의 키한테 articleListMap 값 저장
 			
